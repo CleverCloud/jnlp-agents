@@ -3,7 +3,7 @@ function Make() {
 	Param(
 		[Parameter(Position=1)]
 		[String] $Target = "build",
-		[String] $Group = 'jenkins',
+		[String] $Group = 'clevercloud',
 		[String] $Prefix = 'jnlp-agent',
 		[String] $Suffix = [string]((Get-Location) -split '\\' | Select-Object -Last 1)
 	)
