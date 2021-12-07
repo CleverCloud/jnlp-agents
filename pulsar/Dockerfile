@@ -1,5 +1,8 @@
 FROM jenkins/inbound-agent:alpine
 
+USER root
+WORKDIR /
+
 # Pulsar dependencies
 # https://github.com/apache/pulsar/blob/branch-2.8/pulsar-client-cpp/docker/alpine/Dockerfile
 
@@ -20,7 +23,7 @@ RUN apk update \
 RUN curl -O -L https://boostorg.jfrog.io/artifactory/main/release/1.72.0/source/boost_1_72_0.tar.gz && \
     tar xfz boost_1_72_0.tar.gz && \
     cd /boost_1_72_0 && \
-    ./bootstrap.sh --with-libraries=program_options,regex,system,python --with-python=/usr/bin/python3 && \
+    ./bootstrap.sh --with-libraries=program_options,regex,system && \
     ./b2  cxxflags=-fPIC link=static threading=multi variant=release install && \
     rm -rf /boost_1_72_0.tar.gz /boost_1_72_0
 
@@ -73,15 +76,15 @@ RUN curl -L https://github.com/google/snappy/archive/1.1.8.tar.gz --output snapp
     rm -rf /snappy-1.1.8 /snappy-1.1.8.tar.gz
 
 # Pulsar
-
 RUN curl -O -L https://github.com/apache/pulsar/archive/refs/tags/v2.8.1.tar.gz && \
     tar xfz v2.8.1.tar.gz && \
-    cd v2.8.1 && \
-    cmake .  -DBUILD_TESTS=OFF \
-          -DBUILD_PYTHON_WRAPPER=OFF \
-          -DCMAKE_BUILD_TYPE=Release \
-          -DLINK_STATIC=ON
-          make -j8 pulsarShared pulsarSharedNossl pulsarStatic pulsarStaticWithDeps && \
-          rm -rf /v2.8.1.tar.gz
+    cd pulsar-2.8.1/pulsar-client-cpp && \
+    cmake . \
+        -DBUILD_TESTS=OFF \
+        -DBUILD_PYTHON_WRAPPER=OFF \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DLINK_STATIC=ON && \
+    make -j8 pulsarShared pulsarSharedNossl pulsarStatic pulsarStaticWithDeps && \
+    rm -rf /pulsar-2.8.1 /pulsar-2.8.1.gz
 
 ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
