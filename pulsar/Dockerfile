@@ -87,4 +87,7 @@ RUN curl -O -L https://github.com/apache/pulsar/archive/refs/tags/v2.8.1.tar.gz 
     make -j8 pulsarShared pulsarSharedNossl pulsarStatic pulsarStaticWithDeps && make install && \
     rm -rf /pulsar-2.8.1 /pulsar-2.8.1.gz
 
+USER jenkins
+WORKDIR /home/jenkins
+
 ENTRYPOINT ["/usr/local/bin/jenkins-agent"]
