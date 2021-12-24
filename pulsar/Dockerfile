@@ -4,7 +4,7 @@ USER root
 WORKDIR /
 
 # Pulsar dependencies
-# https://github.com/apache/pulsar/blob/branch-2.8/pulsar-client-cpp/docker/alpine/Dockerfile
+# https://github.com/apache/pulsar/blob/branch-2.9/pulsar-client-cpp/docker/alpine/Dockerfile
 
 RUN apk update \
     && apk upgrade \
@@ -76,16 +76,16 @@ RUN curl -L https://github.com/google/snappy/archive/1.1.8.tar.gz --output snapp
     rm -rf /snappy-1.1.8 /snappy-1.1.8.tar.gz
 
 # Pulsar
-RUN curl -O -L https://github.com/apache/pulsar/archive/refs/tags/v2.8.1.tar.gz && \
-    tar xfz v2.8.1.tar.gz && \
-    cd pulsar-2.8.1/pulsar-client-cpp && \
+RUN curl -O -L https://github.com/apache/pulsar/archive/refs/tags/v2.9.1.tar.gz && \
+    tar xfz v2.9.1.tar.gz && \
+    cd pulsar-2.9.1/pulsar-client-cpp && \
     cmake . \
         -DBUILD_TESTS=OFF \
         -DBUILD_PYTHON_WRAPPER=OFF \
         -DCMAKE_BUILD_TYPE=Release \
         -DLINK_STATIC=ON && \
     make -j8 pulsarShared pulsarSharedNossl pulsarStatic pulsarStaticWithDeps && make install && \
-    rm -rf /pulsar-2.8.1 /pulsar-2.8.1.gz
+    rm -rf /pulsar-2.9.1 /pulsar-2.9.1.gz
 
 USER jenkins
 WORKDIR /home/jenkins
